@@ -8,6 +8,7 @@
 #include "Components/BoxComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Components/ShootComponent.h"
 #include "PlayerPawn.generated.h" 
 
 
@@ -34,6 +35,8 @@ protected:
 
 	APlayerController* PlayerController;
 
+	FVector2D MoveLimit;
+
 private:
 
 	FVector2D TouchLocation;
@@ -47,16 +50,19 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Pawn)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Pawn")
 	UBoxComponent* PawnCollision;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Pawn)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Pawn")
 	UStaticMeshComponent* PawnMesh;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Pawn)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Pawn")
 	UCameraComponent* PawnCamera;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Controls)
-		float ToushMoveSensivity;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Shooting")
+	UShootComponent* ShootComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Controls")
+	float ToushMoveSensivity;
 
 };

@@ -9,7 +9,8 @@
 // Sets default values
 APlayerPawn::APlayerPawn()
 	:
-	ToushMoveSensivity(1.2) //Чуствительность тача
+	ToushMoveSensivity(1.2f), //Чуствительность тача
+	MoveLimit(FVector2D(600.f, 500.f)) //Предел передвижения
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -25,6 +26,8 @@ APlayerPawn::APlayerPawn()
 	 
 	PawnCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("PawnCamera"));
 	//PawnCamera->SetupAttachment(CamSpringArm);
+
+	ShootComponent = CreateDefaultSubobject<UShootComponent>(TEXT("ShootComponent"));
 
 } 
 
@@ -67,8 +70,8 @@ void APlayerPawn::OnTouchMove(ETouchIndex::Type FingerIndex, FVector Location)
 	TouchDeltaMove *= ToushMoveSensivity;
 
 	FVector NewLocation = GetActorLocation();
-	NewLocation.X = FMath::Clamp(NewLocation.X + TouchDeltaMove.Y, -500.f, 500.f); //Ограничитель передвижения по X
-	NewLocation.Y = FMath::Clamp(NewLocation.Y + TouchDeltaMove.X * -1.f, -600.f, 600.f); //Ограничитель передвижения по Y
+	NewLocation.X = FMath::Clamp(NewLocation.X + TouchDeltaMove.Y, -MoveLimit.Y, MoveLimit.Y); //Ограничитель передвижения по X
+	NewLocation.Y = FMath::Clamp(NewLocation.Y + TouchDeltaMove.X * -1.f, -MoveLimit.X, MoveLimit.X); //Ограничитель передвижения по Y
 
 	SetActorLocation(NewLocation);
 
