@@ -2,6 +2,7 @@
 
 #include "ArcadeShootEmUpGameModeBase.h"
 
-
-
-
+AArcadeShootEmUpGameModeBase::AArcadeShootEmUpGameModeBase()
+{
+	EnemySpawnController = CreateDefaultSubobject<UEnemySpawnController>(TEXT("EnemySpawnController"));
+}
