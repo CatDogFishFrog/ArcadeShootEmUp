@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Pawns/EnemyPawn.h"
 #include "EnemySpawnController.generated.h"
 
 USTRUCT(BlueprintType)
@@ -13,7 +14,7 @@ struct FEnemySpawnInfo
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemies")
-		TSubclassOf<APawn> EnemyClass = APawn::StaticClass();
+		TSubclassOf<AEnemyPawn> EnemyClass = AEnemyPawn::StaticClass();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemies")
 		FTransform SpawnTransform;
@@ -41,12 +42,13 @@ protected:
 
 	void SpawnEnemy();
 
-	FEnemySpawnInfo SpawnStage;
-
+	FEnemySpawnInfo SpawnStage; 
 	int EnemiesSpawned;
 
 	FTimerHandle ChangeStageTimer;
 	FTimerHandle EnemySpawnTimer;
+
+	FRandomStream Random;
 
 public:	
 	

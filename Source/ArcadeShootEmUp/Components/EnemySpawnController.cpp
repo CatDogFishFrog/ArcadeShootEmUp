@@ -10,9 +10,7 @@ void UEnemySpawnController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SpawnStage = FEnemySpawnInfo();
-	SpawnStage.NumOfEnemies = 10;
-	SpawnStage.SpawnDelay = 1.f;
+	Random.GenerateNewSeed();
 
 	StartSpawnStage();
 	
@@ -20,20 +18,27 @@ void UEnemySpawnController::BeginPlay()
 
 void UEnemySpawnController::StartSpawnStage()
 {
-	GetWorld()->GetTimerManager().SetTimer(EnemySpawnTimer, this, &UEnemySpawnController::SpawnEnemy, SpawnStage.SpawnDelay, true);
-	
+
+	SpawnStage = SpawnStages[Random.RandRange(0, SpawnStages.Num()-1)]; 
+
+	EnemiesSpawned = 0;
+	SpawnEnemy();
+
+	float ChangeStageTime = Random.RandRange(StageMinDelay, StageMaxDelay);
+	GetWorld()->GetTimerManager().SetTimer(ChangeStageTimer, this, &UEnemySpawnController::StartSpawnStage, ChangeStageTime,false);
+
 }
 
 void UEnemySpawnController::SpawnEnemy()
 {
 	FActorSpawnParameters SpawnParameters;
-	GetWorld()->SpawnActor<APawn>(SpawnStage.EnemyClass,SpawnStage.SpawnTransform, SpawnParameters);
+	GetWorld()->SpawnActor<AEnemyPawn>(SpawnStage.EnemyClass,SpawnStage.SpawnTransform, SpawnParameters);
 	UE_LOG(LogTemp, Log, TEXT("Spawn Enemy!!"));
 
 
 	EnemiesSpawned++;
-	if (EnemiesSpawned >= SpawnStage.NumOfEnemies) {
-		GetWorld()->GetTimerManager().ClearTimer(EnemySpawnTimer);
+	if (EnemiesSpawned < SpawnStage.NumOfEnemies) {
+		GetWorld()->GetTimerManager().SetTimer(EnemySpawnTimer, this, &UEnemySpawnController::SpawnEnemy, SpawnStage.SpawnDelay, false);
 	}
 }
 
