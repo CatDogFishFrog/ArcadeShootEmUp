@@ -18,6 +18,9 @@ public:
 	TSubclassOf<AShootProjectile> ProjetileClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shooting")
+	float Damage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shooting")
 	FVector Offset;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shooting")

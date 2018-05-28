@@ -4,6 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "Components/BoxComponent.h"
+#include "Components/ShootComponent.h"
+#include "Components/HealthComponent.h"
 #include "EnemyPawn.generated.h"
 
 UCLASS()
@@ -19,6 +22,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UFUNCTION()
+		void DestroyPawn();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -26,6 +32,16 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Pawn")
+	UBoxComponent* PawnCollision;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Pawn")
+	UStaticMeshComponent* PawnMesh;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Shooting")
+	UShootComponent* ShootComponent;
 	
-	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Health")
+	UHealthComponent* HealthComponent;
+
 };
