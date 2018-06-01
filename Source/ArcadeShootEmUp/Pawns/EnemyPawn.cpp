@@ -1,6 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "EnemyPawn.h"
+#include "Kismet/GameplayStatics.h"
+#include "GameFramework/DamageType.h"
 #include "Components/StaticMeshComponent.h"
 
 // Sets default values
@@ -27,7 +29,7 @@ void AEnemyPawn::BeginPlay()
 	Super::BeginPlay();
 	
 	HealthComponent->OnHealthEnded.AddDynamic(this, &AEnemyPawn::DestroyPawn);
-
+	OnActorBeginOverlap.AddDynamic(this, &AEnemyPawn::OnEnemyOverlap);
 }
 
 void AEnemyPawn::DestroyPawn()
@@ -35,10 +37,23 @@ void AEnemyPawn::DestroyPawn()
 	Destroy();
 }
 
+void AEnemyPawn::OnEnemyOverlap(AActor* OverlapedActor, AActor* OtherActor) 
+{
+	//UE_LOG(LogTemp, Log, TEXT("%s"), *OtherActor->GetName());
+	if (OtherActor != UGameplayStatics::GetPlayerPawn(this, 0)) return;
+
+	UGameplayStatics::ApplyDamage(OtherActor, 100.f, GetController(), this, UDamageType::StaticClass());
+
+	DestroyPawn();
+}
+
 // Called every frame
 void AEnemyPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	float WorldMoveOffset = -100.f * DeltaTime; 
+	AddActorWorldOffset(FVector(WorldMoveOffset, 0.f, 0.f));
 
 }
 

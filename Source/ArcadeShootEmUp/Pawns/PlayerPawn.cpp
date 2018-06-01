@@ -5,12 +5,17 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/InputComponent.h"
 #include "GameFramework/PlayerController.h"
+#include "Engine/World.h"
+#include "TimerManager.h"
+#include "Materials/MaterialInstanceDynamic.h"
+
 
 // Sets default values
 APlayerPawn::APlayerPawn()
 	:
 	ToushMoveSensivity(1.2f), //Чуствительность тача
 	MoveLimit(FVector2D(600.f, 500.f)) //Предел передвижения
+	
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -20,12 +25,8 @@ APlayerPawn::APlayerPawn()
 
 	PawnMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PawnMesh"));
 	PawnMesh->SetupAttachment(PawnCollision, NAME_None);
-	
-	/*CamSpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("CamSpringArm"));
-	CamSpringArm->SetupAttachment(RootComponent);*/
 	 
 	PawnCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("PawnCamera"));
-	//PawnCamera->SetupAttachment(CamSpringArm);
 
 	ShootComponent = CreateDefaultSubobject<UShootComponent>(TEXT("ShootComponent"));
 
@@ -36,11 +37,38 @@ void APlayerPawn::PossessedBy(AController * NewController)
 	PlayerController = Cast<APlayerController>(NewController);
 }
 
+bool APlayerPawn::CanBeDamaged_Implementation()
+{
+	return bCanBeDamaged;
+}
+
+
+void APlayerPawn::ExplodePawn_Implementation()
+{
+	SetActorEnableCollision(false);
+
+	ShootComponent->StopShooting();
+
+	PawnMesh->SetMaterial(0, RecoverMaterial);
+}
+
+void APlayerPawn::RecoverPawn_Implementation()
+{
+	ShootComponent->StartShooting();
+
+	SetActorEnableCollision(true);
+
+	PawnMesh->SetMaterial(0, PawnMaterial);
+}
+
+
+
 // Called when the game starts or when spawned
 void APlayerPawn::BeginPlay()
 {
 	Super::BeginPlay();
-	 
+	
+	PawnMaterial = PawnMesh->GetMaterial(0);
 }
 
 
@@ -57,9 +85,17 @@ void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	InputComponent->BindTouch(IE_Pressed, this, &APlayerPawn::OnTouchPress);
-	//InputComponent->BindTouch(IE_Released, this, &APlayerPawn::OnTouchRelease);
 
 	InputComponent->BindTouch(IE_Repeat, this, &APlayerPawn::OnTouchMove);
+}
+
+float APlayerPawn::TakeDamage(float Damage, const FDamageEvent& DamageEvent, AController * InstigatedBy, AActor * DamageCauser)
+{
+	if (!CanBeDamaged()) return 0.f;
+
+	Super::TakeDamage(Damage, DamageEvent, InstigatedBy, DamageCauser);
+	PawnDamaged.Broadcast();
+	return Damage;
 }
 
 //Touch Controls
@@ -83,5 +119,3 @@ void APlayerPawn::OnTouchPress(ETouchIndex::Type FingerIndex, FVector Location)
 	UE_LOG(LogTemp, Log, TEXT("Touch Press : %s"), *TouchLocation.ToString());
 	TouchLocation = FVector2D(Location.X, Location.Y);
 }
-
-

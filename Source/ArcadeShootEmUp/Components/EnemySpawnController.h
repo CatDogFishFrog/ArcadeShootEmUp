@@ -14,16 +14,16 @@ struct FEnemySpawnInfo
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemies")
-		TSubclassOf<AEnemyPawn> EnemyClass = AEnemyPawn::StaticClass();
+	TSubclassOf<AEnemyPawn> EnemyClass = AEnemyPawn::StaticClass();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemies")
-		FTransform SpawnTransform;
+	FTransform SpawnTransform;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemies")
-		int NumOfEnemies;
+	int NumOfEnemies;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemies")
-		float SpawnDelay;
+	float SpawnDelay;
 
 };
 
@@ -37,6 +37,8 @@ class ARCADESHOOTEMUP_API UEnemySpawnController : public UActorComponent
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+
+	virtual void Deactivate() override;
 
 	void StartSpawnStage();
 

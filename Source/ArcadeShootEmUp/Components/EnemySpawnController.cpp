@@ -16,6 +16,13 @@ void UEnemySpawnController::BeginPlay()
 	
 }
 
+void UEnemySpawnController::Deactivate()
+{
+	Super::Deactivate();
+	GetWorld()->GetTimerManager().ClearTimer(ChangeStageTimer);
+	GetWorld()->GetTimerManager().ClearTimer(EnemySpawnTimer);
+}
+
 void UEnemySpawnController::StartSpawnStage()
 {
 
@@ -33,13 +40,12 @@ void UEnemySpawnController::SpawnEnemy()
 {
 	FActorSpawnParameters SpawnParameters;
 	GetWorld()->SpawnActor<AEnemyPawn>(SpawnStage.EnemyClass,SpawnStage.SpawnTransform, SpawnParameters);
-	UE_LOG(LogTemp, Log, TEXT("Spawn Enemy!!"));
+	//UE_LOG(LogTemp, Log, TEXT("Spawn Enemy!!"));
 
 
 	EnemiesSpawned++;
 	if (EnemiesSpawned < SpawnStage.NumOfEnemies) {
 		GetWorld()->GetTimerManager().SetTimer(EnemySpawnTimer, this, &UEnemySpawnController::SpawnEnemy, SpawnStage.SpawnDelay, false);
 	}
-}
-
+} 
 

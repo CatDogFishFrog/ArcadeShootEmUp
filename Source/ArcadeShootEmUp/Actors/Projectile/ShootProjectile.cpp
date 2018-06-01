@@ -45,7 +45,7 @@ void AShootProjectile::BeginPlay()
 
 void AShootProjectile::OnProjectileOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 BodyIndex, bool Sweep, const FHitResult& Hit)
 {
-	UE_LOG(LogTemp, Log, TEXT("Proj Overlapped!"));
+	//UE_LOG(LogTemp, Log, TEXT("Proj Overlapped!"));
 
 	if (!GetOuter()) return;
 	APawn* PawnOwner = Cast<APawn>(GetOwner());

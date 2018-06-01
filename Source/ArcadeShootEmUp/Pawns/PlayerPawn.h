@@ -10,6 +10,7 @@
 #include "Components/ShootComponent.h"
 #include "PlayerPawn.generated.h" 
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPawnDamagedEvent);
 
 UCLASS()
 class ARCADESHOOTEMUP_API APlayerPawn : public APawn
@@ -19,7 +20,6 @@ class ARCADESHOOTEMUP_API APlayerPawn : public APawn
 public:
 	// Sets default values for this pawn's properties
 	APlayerPawn();
-
 
 
 protected:
@@ -42,6 +42,8 @@ private:
 
 	bool Touching;
 
+	UMaterialInterface* PawnMaterial;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -49,6 +51,21 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
+	UFUNCTION(BlueprintPure, BlueprintNativeEvent, Category = "Healths")
+	bool CanBeDamaged();
+	bool CanBeDamaged_Implementation();
+
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Healths")
+	void ExplodePawn();
+	void ExplodePawn_Implementation();
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Healths")
+	void RecoverPawn();
+	void RecoverPawn_Implementation();
+
+	virtual float TakeDamage(float Damage, const FDamageEvent& DamageEvent, AController* InstigatedBy, AActor* DamageCauser);
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Pawn")
 	UBoxComponent* PawnCollision;
 
@@ -63,5 +80,11 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Controls")
 	float ToushMoveSensivity;
+
+	UPROPERTY(BlueprintAssignable, Category = "Healths")
+	FPawnDamagedEvent PawnDamaged;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Pawn")
+	UMaterialInterface* RecoverMaterial;
 
 };

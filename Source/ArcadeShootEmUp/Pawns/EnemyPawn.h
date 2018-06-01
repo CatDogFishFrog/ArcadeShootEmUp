@@ -23,7 +23,10 @@ protected:
 	virtual void BeginPlay() override;
 
 	UFUNCTION()
-		void DestroyPawn();
+	void DestroyPawn();
+
+	UFUNCTION()
+	void OnEnemyOverlap(AActor* OverlapedActor, AActor* OtherActor);
 
 public:	
 	// Called every frame
