@@ -45,11 +45,17 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Game")
 	void EndGame();
 
+	UFUNCTION(BlueprintCallable, Category = "Game")
+	void AddPoints(int Points);
+
 	UPROPERTY(BlueprintReadWrite, Category = "Game")
 	float PlayerRecoverTime;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Game")
 	class APlayerPawn* PlayerPawn;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Game")
+	int GamePoints;
 
 };
 

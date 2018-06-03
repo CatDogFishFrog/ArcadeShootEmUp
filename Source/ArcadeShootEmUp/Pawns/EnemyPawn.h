@@ -38,7 +38,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Pawn")
 	UBoxComponent* PawnCollision;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Pawn")
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Pawn")
 	UStaticMeshComponent* PawnMesh;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Shooting")
@@ -46,5 +46,8 @@ public:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Health")
 	UHealthComponent* HealthComponent;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Pawn")
+	int DestroyPoints;
 
 };

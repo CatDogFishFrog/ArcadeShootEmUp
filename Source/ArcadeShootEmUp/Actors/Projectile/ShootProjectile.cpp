@@ -18,10 +18,6 @@ AShootProjectile::AShootProjectile()
 	Collision = CreateDefaultSubobject<USphereComponent>(TEXT("ProjectileCollision"));
 	RootComponent = Collision;
 
-	//Collision->SetCollisionObjectType(ECC_WorldDynamic);
-	//Collision->SetCollisionResponseToAllChannels(ECR_Ignore);
-	//Collision->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
-
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(Collision, NAME_None);
 	Mesh->SetCollisionProfileName("NoCollision");
@@ -33,9 +29,9 @@ AShootProjectile::AShootProjectile()
 void AShootProjectile::BeginPlay()
 {
 	Super::BeginPlay();
+
 	if (GetOwner())
 	{
-		//UE_LOG(LogTemp, Log, TEXT("Owner!!"));
 		Collision->IgnoreActorWhenMoving(GetOwner(), true);
 	}
 
@@ -45,7 +41,7 @@ void AShootProjectile::BeginPlay()
 
 void AShootProjectile::OnProjectileOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 BodyIndex, bool Sweep, const FHitResult& Hit)
 {
-	//UE_LOG(LogTemp, Log, TEXT("Proj Overlapped!"));
+	if (!OtherActor || !Cast<APawn>(OtherActor)) return; // Если не пересекается с Actor или если это не Pawn
 
 	if (!GetOuter()) return;
 	APawn* PawnOwner = Cast<APawn>(GetOwner());

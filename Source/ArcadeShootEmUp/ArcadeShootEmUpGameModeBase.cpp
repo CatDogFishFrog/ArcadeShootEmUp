@@ -50,6 +50,13 @@ void AArcadeShootEmUpGameModeBase::EndGame()
 	UGameplayStatics::GetPlayerPawn(this, 0)->Destroy();
 
 	UE_LOG(LogTemp, Log, TEXT("GAME OVER!"));
+
+	SetPause(UGameplayStatics::GetPlayerController(this, 0), false);
+}
+
+void AArcadeShootEmUpGameModeBase::AddPoints(int Points)
+{
+	GamePoints += Points;
 }
 
  

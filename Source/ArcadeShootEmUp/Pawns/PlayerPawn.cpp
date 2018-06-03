@@ -22,6 +22,8 @@ APlayerPawn::APlayerPawn()
 
 	PawnCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("PawnCollision"));
 	RootComponent = PawnCollision;
+	PawnCollision->SetCollisionProfileName("Pawn");
+	PawnCollision->SetCollisionResponseToChannel(ECC_PhysicsBody, ECR_Ignore);
 
 	PawnMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PawnMesh"));
 	PawnMesh->SetupAttachment(PawnCollision, NAME_None);
