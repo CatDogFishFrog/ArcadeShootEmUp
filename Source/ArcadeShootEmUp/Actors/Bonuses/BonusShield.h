@@ -4,13 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "Actors/Bonuses/Bonus.h"
-#include "BonusPoints.generated.h"
+#include "BonusShield.generated.h"
 
-/**
- * 
- */
+class APawnShield;
+
 UCLASS()
-class ARCADESHOOTEMUP_API ABonusPoints : public ABonus
+class ARCADESHOOTEMUP_API ABonusShield : public ABonus
 {
 	GENERATED_BODY()
 
@@ -20,6 +19,7 @@ protected:
 
 public:
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bonus")
-		int Points;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shield")
+		TSubclassOf<APawnShield> ShieldClass;
+
 };

@@ -40,8 +40,6 @@ void UEnemySpawnController::SpawnEnemy()
 {
 	FActorSpawnParameters SpawnParameters;
 	GetWorld()->SpawnActor<AEnemyPawn>(SpawnStage.EnemyClass,SpawnStage.SpawnTransform, SpawnParameters);
-	//UE_LOG(LogTemp, Log, TEXT("Spawn Enemy!!"));
-
 
 	EnemiesSpawned++;
 	if (EnemiesSpawned < SpawnStage.NumOfEnemies) {

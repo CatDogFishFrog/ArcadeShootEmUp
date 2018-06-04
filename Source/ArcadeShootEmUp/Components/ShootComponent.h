@@ -56,7 +56,7 @@ public:
 	void StopShooting();
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Shooting")
-	float ShootPediod;
+	float ShootPeriod;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Shooting")
 	TArray<FShootInfo> ShootInfos;

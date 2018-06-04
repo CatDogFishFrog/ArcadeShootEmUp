@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Actors/Bonuses/Bonus.h"
-#include "BonusPoints.generated.h"
+#include "BonusShootLevelUp.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class ARCADESHOOTEMUP_API ABonusPoints : public ABonus
+class ARCADESHOOTEMUP_API ABonusShootLevelUp : public ABonus
 {
 	GENERATED_BODY()
 
@@ -18,8 +18,5 @@ protected:
 
 	virtual void BonusCollected_Implementation() override;
 
-public:
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bonus")
-		int Points;
 };

@@ -7,7 +7,24 @@
 #include "Components/BoxComponent.h"
 #include "Components/ShootComponent.h"
 #include "Components/HealthComponent.h"
+#include "Actors/Bonuses/Bonus.h"
 #include "EnemyPawn.generated.h"
+
+USTRUCT(BlueprintType)
+struct FBonusChance
+{
+	GENERATED_BODY()
+
+public:
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bonus")
+		TSubclassOf<ABonus> BonusClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bonus")
+		float Chance;
+
+};
+
 
 UCLASS()
 class ARCADESHOOTEMUP_API AEnemyPawn : public APawn
@@ -22,8 +39,10 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	void SpawnBonuses();
+
 	UFUNCTION()
-	void DestroyPawn();
+	void KillPawn();
 
 	UFUNCTION()
 	void OnEnemyOverlap(AActor* OverlapedActor, AActor* OtherActor);
@@ -33,7 +52,9 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	UFUNCTION(BlueprintCallable, Category = "Pawn")
+	void DestroyPawn();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Pawn")
 	UBoxComponent* PawnCollision;
@@ -49,5 +70,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Pawn")
 	int DestroyPoints;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Bonus")
+		TArray<FBonusChance> PossibleBonuses;
+
 
 };

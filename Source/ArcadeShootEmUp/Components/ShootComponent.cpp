@@ -7,7 +7,7 @@
 // Sets default values for this component's properties
 UShootComponent::UShootComponent()
 	:
-	ShootPediod(1.f)
+	ShootPeriod(1.f)
 {
 
 	// ...
@@ -48,7 +48,7 @@ void UShootComponent::Shoot()
 
 void UShootComponent::StartShooting()
 {
-	GetWorld()->GetTimerManager().SetTimer(ShootingTimer, this, &UShootComponent::Shoot, ShootPediod, true, ShootPediod);
+	GetWorld()->GetTimerManager().SetTimer(ShootingTimer, this, &UShootComponent::Shoot, ShootPeriod, true, ShootPeriod);
 }
 
 void UShootComponent::StopShooting()

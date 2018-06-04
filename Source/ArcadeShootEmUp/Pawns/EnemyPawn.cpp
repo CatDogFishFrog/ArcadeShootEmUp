@@ -5,6 +5,7 @@
 #include "GameFramework/DamageType.h"
 #include "Components/StaticMeshComponent.h"
 #include "ArcadeShootEmUpGameModeBase.h"
+#include "Engine/World.h"
 
 // Sets default values
 AEnemyPawn::AEnemyPawn()
@@ -29,8 +30,18 @@ void AEnemyPawn::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	HealthComponent->OnHealthEnded.AddDynamic(this, &AEnemyPawn::DestroyPawn);
+	HealthComponent->OnHealthEnded.AddDynamic(this, &AEnemyPawn::KillPawn);
 	OnActorBeginOverlap.AddDynamic(this, &AEnemyPawn::OnEnemyOverlap);
+}
+
+void AEnemyPawn::KillPawn()
+{
+	AArcadeShootEmUpGameModeBase* Gamemode = Cast<AArcadeShootEmUpGameModeBase>(UGameplayStatics::GetGameMode(this));
+	if (Gamemode) Gamemode->AddPoints(DestroyPoints);
+
+	SpawnBonuses();
+
+	DestroyPawn();
 }
 
 void AEnemyPawn::DestroyPawn()
@@ -46,9 +57,29 @@ void AEnemyPawn::OnEnemyOverlap(AActor* OverlapedActor, AActor* OtherActor)
 	//UE_LOG(LogTemp, Log, TEXT("%s"), *OtherActor->GetName());
 	if (OtherActor != UGameplayStatics::GetPlayerPawn(this, 0)) return;
 
-	UGameplayStatics::ApplyDamage(OtherActor, 100.f, GetController(), this, UDamageType::StaticClass());
+	float AppliedDamage = UGameplayStatics::ApplyDamage(OtherActor, 100.f, GetController(), this, UDamageType::StaticClass());
 
-	DestroyPawn();
+	if(AppliedDamage > 0.f) DestroyPawn();
+}
+
+void AEnemyPawn::SpawnBonuses()
+{
+	for (FBonusChance Bonus : PossibleBonuses) {
+
+		FRandomStream Random;
+		Random.GenerateNewSeed();
+
+		FActorSpawnParameters SpawnParameters;
+		SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+		for (FBonusChance Bonus : PossibleBonuses) {
+			float RandChance = Random.RandRange(0.f, 100.f);
+			if (RandChance < Bonus.Chance) {
+				GetWorld()->SpawnActor<ABonus>(Bonus.BonusClass, GetActorLocation(), FRotator(0.f), SpawnParameters);
+			}
+		}
+
+	}
 }
 
 // Called every frame
@@ -58,13 +89,6 @@ void AEnemyPawn::Tick(float DeltaTime)
 
 	float WorldMoveOffset = -100.f * DeltaTime; 
 	AddActorWorldOffset(FVector(WorldMoveOffset, 0.f, 0.f));
-
-}
-
-// Called to bind functionality to input
-void AEnemyPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 }
 

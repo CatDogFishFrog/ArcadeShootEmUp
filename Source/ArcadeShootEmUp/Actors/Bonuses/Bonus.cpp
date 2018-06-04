@@ -26,12 +26,10 @@ void ABonus::NotifyActorBeginOverlap(AActor * OtherActor)
 	Super::NotifyActorBeginOverlap(OtherActor);
 
 	UE_LOG(LogTemp, Log, TEXT("Bonus overlap"));
-
 	if(!OtherActor) return;
 	if(!Cast<APlayerPawn>(OtherActor)) return;
 
 	UE_LOG(LogTemp, Log, TEXT("Bonus CHAR overlap"));
-	
 	BonusCollected();
 
 }
@@ -39,7 +37,11 @@ void ABonus::NotifyActorBeginOverlap(AActor * OtherActor)
 
 void ABonus::BonusCollected_Implementation()
 {
+	//if (CollectParticle)
+	//	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), CollectParticle, GetActorTransform(), true);
+
 	Destroy();
+
 }
 
 void ABonus::Tick(float DeltaTime)

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Bonus.generated.h"
+
 UCLASS(Blueprintable)
 class ARCADESHOOTEMUP_API ABonus : public AActor
 {
@@ -29,5 +30,8 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Shooting")
 	class USphereComponent* Collision;
+
+	//UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Visual")
+	//UParticleSystem* CollectParticle;
 
 };

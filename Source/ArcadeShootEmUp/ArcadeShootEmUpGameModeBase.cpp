@@ -8,7 +8,8 @@
 
 AArcadeShootEmUpGameModeBase::AArcadeShootEmUpGameModeBase()
 	:
-	PlayerRecoverTime(3)
+	PlayerRecoverTime(3),
+	CurrentShootLevel(-1)
 {
 	EnemySpawnController = CreateDefaultSubobject<UEnemySpawnController>(TEXT("EnemySpawnController"));
 	HealthsComponent = CreateDefaultSubobject<UGameHealthComponent>(TEXT("HealthsComponent"));
@@ -20,8 +21,13 @@ void AArcadeShootEmUpGameModeBase::BeginPlay()
 	HealthsComponent->HealthsEnded.AddDynamic(this, &AArcadeShootEmUpGameModeBase::EndGame);
 
 	PlayerPawn = Cast<APlayerPawn>(UGameplayStatics::GetPlayerPawn(this, 0));
+	if (!PlayerPawn) return;
+
+	ChangeShootLevel(true);
 
 	PlayerPawn->PawnDamaged.AddDynamic(this, &AArcadeShootEmUpGameModeBase::ExplodePawn);
+
+	//GetWorld()->GetTimerManager().SetTimer(IncreaseDifficultyTimer, this, &AArcadeShootEmUpGameModeBase::IncreaseDifficulty, IncreaseDifficultyPeriod, true);
 }
 
 void AArcadeShootEmUpGameModeBase::ExplodePawn_Implementation()
@@ -30,8 +36,11 @@ void AArcadeShootEmUpGameModeBase::ExplodePawn_Implementation()
 
 	HealthsComponent->ChangeHealths(-1);
 
-	if(!IsGameOver)
-		GetWorld()->GetTimerManager().SetTimer(RecoverTimer, this, &AArcadeShootEmUpGameModeBase::RecoverPawn_Implementation, PlayerRecoverTime, false);
+	ChangeShootLevel(false);
+
+	if (!IsGameOver)
+		GetWorld()->GetTimerManager().SetTimer(RecoverTimer, this, &AArcadeShootEmUpGameModeBase::RecoverPawn, PlayerRecoverTime, false);
+
 }
 
 void AArcadeShootEmUpGameModeBase::RecoverPawn_Implementation()
@@ -49,7 +58,7 @@ void AArcadeShootEmUpGameModeBase::EndGame()
 
 	UGameplayStatics::GetPlayerPawn(this, 0)->Destroy();
 
-	UE_LOG(LogTemp, Log, TEXT("GAME OVER!"));
+	UE_LOG(LogTemp, Log, TEXT("GAME OVER!!!"));
 
 	SetPause(UGameplayStatics::GetPlayerController(this, 0), false);
 }
@@ -57,6 +66,23 @@ void AArcadeShootEmUpGameModeBase::EndGame()
 void AArcadeShootEmUpGameModeBase::AddPoints(int Points)
 {
 	GamePoints += Points;
+}
+
+bool AArcadeShootEmUpGameModeBase::ChangeShootLevel(bool Up)
+{
+	PlayerPawn = Cast<APlayerPawn>(UGameplayStatics::GetPlayerPawn(this, 0));
+	if (!PlayerPawn) return false;
+
+	int NewLevel = FMath::Clamp(CurrentShootLevel + (Up ? 1 : -1), 0, ShootInfoLevels.Num() - 1);
+
+	if (NewLevel == CurrentShootLevel) return false;
+
+	CurrentShootLevel = NewLevel;
+
+	PlayerPawn->ShootComponent->ShootInfos = ShootInfoLevels[CurrentShootLevel].ShootInfos;
+	PlayerPawn->ShootComponent->ShootPeriod = ShootInfoLevels[CurrentShootLevel].ShootPeriod;
+
+	return true;
 }
 
  
