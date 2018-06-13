@@ -21,5 +21,4 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shield")
 		TSubclassOf<APawnShield> ShieldClass;
-
 };

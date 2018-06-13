@@ -18,5 +18,4 @@ protected:
 
 	virtual void BonusCollected_Implementation() override;
 
-
 };

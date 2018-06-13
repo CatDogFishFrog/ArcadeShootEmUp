@@ -12,5 +12,3 @@ void ABonusPoints::BonusCollected_Implementation()
 
 	Super::BonusCollected_Implementation();
 }
-
-

@@ -22,7 +22,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bonus")
 		float Chance;
-
 };
 
 
@@ -46,14 +45,12 @@ protected:
 
 	UFUNCTION()
 	void OnEnemyOverlap(AActor* OverlapedActor, AActor* OtherActor);
-
+	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Called to bind functionality to input
-
-	UFUNCTION(BlueprintCallable, Category = "Pawn")
+	UFUNCTION(BlueprintCallable, Category="Pawn")
 	void DestroyPawn();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Pawn")
@@ -65,14 +62,15 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Shooting")
 	UShootComponent* ShootComponent;
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Health")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Shooting")
 	UHealthComponent* HealthComponent;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Pawn")
 	int DestroyPoints;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Bonus")
-		TArray<FBonusChance> PossibleBonuses;
+	TArray<FBonusChance> PossibleBonuses;
 
-
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Visual")
+	UParticleSystem* DestroyParticle;
 };

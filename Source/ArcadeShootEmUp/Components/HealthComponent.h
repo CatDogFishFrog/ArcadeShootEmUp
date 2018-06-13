@@ -13,7 +13,7 @@ class ARCADESHOOTEMUP_API UHealthComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	// Sets default values for this component's properties
 	UHealthComponent();
 
@@ -21,11 +21,8 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	float Health;
-
 	UFUNCTION()
-	void OnOwnerDamaged(AActor* DamagedActor ,float Damage, const UDamageType* DamageType, AController* Instigator, AActor* DamageCauser);
-
+	void OnOwnerDamaged(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* Instigator, AActor* DamageCauser);
 
 public:	
 
@@ -34,8 +31,11 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "Health")
 	float GetHealth();
-	
+
 	UPROPERTY(BlueprintAssignable, Category = "Health")
 	FHealthEndedEvent OnHealthEnded;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
+	float Health;
 
 };

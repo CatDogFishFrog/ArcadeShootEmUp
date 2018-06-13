@@ -19,10 +19,10 @@ struct FShootInfoLevel
 public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shooting")
-		TArray<FShootInfo> ShootInfos;
+	TArray<FShootInfo> ShootInfos;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shooting")
-		float ShootPeriod;
+	float ShootPeriod;
 
 };
 
@@ -38,11 +38,11 @@ class ARCADESHOOTEMUP_API AArcadeShootEmUpGameModeBase : public AGameModeBase
 protected:
 
 	UFUNCTION(BlueprintNativeEvent, Category = "Game")
-		void ExplodePawn();
+	void ExplodePawn();
 	void ExplodePawn_Implementation();
 
 	UFUNCTION(BlueprintNativeEvent, Category = "Game")
-		void RecoverPawn();
+	void RecoverPawn();
 	void RecoverPawn_Implementation();
 
 	FTimerHandle RecoverTimer;
@@ -54,7 +54,7 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Enemies")
 	UEnemySpawnController* EnemySpawnController;
-	
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Game Health")
 	UGameHealthComponent* HealthsComponent;
 
@@ -64,8 +64,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Game")
 	void EndGame();
 
-	//UFUNCTION(BlueprintCallable, Category = "Game")
-	//void IncreaseDifficulty();
+	UFUNCTION(BlueprintCallable, Category = "Game")
+	void IncreaseDifficulty();
 
 	UFUNCTION(BlueprintCallable, Category = "Game")
 	void AddPoints(int Points);
@@ -91,7 +91,4 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Shooting")
 	int CurrentShootLevel;
 
-
 };
-
-

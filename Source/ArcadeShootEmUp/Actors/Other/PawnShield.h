@@ -16,18 +16,18 @@ class ARCADESHOOTEMUP_API APawnShield : public AActor
 protected:
 
 	FTimerHandle ShieldTimer;
-	
+
 	class APlayerPawn* ShildForPawn;
 
-public:	
+public:
 	// Sets default values for this actor's properties
 	APawnShield();
 
 	UFUNCTION(BlueprintCallable, Category = "Shield")
-	void ActivateShield(APlayerPawn* PlayerPawn);
+		void ActivateShield(APlayerPawn* PlayerPawn);
 
 	UFUNCTION(BlueprintCallable, Category = "Shield")
-	void DeactivateShield();
+		void DeactivateShield();
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Shield")
 		float ShieldTime;

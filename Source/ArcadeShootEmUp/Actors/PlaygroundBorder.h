@@ -11,13 +11,12 @@ class ARCADESHOOTEMUP_API APlaygroundBorder : public AActor
 {
 	GENERATED_BODY()
 	
-public:	
+public:
 	// Sets default values for this actor's properties
 	APlaygroundBorder();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	class UBoxComponent* Trigger;
+		class UBoxComponent* Trigger;
 
 	virtual void NotifyActorEndOverlap(AActor* OtherActor) override;
-
 };

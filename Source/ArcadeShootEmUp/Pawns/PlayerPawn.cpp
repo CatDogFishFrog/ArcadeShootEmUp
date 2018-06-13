@@ -3,21 +3,24 @@
 
 #include "PlayerPawn.h"
 #include "Components/StaticMeshComponent.h"
+#include "Particles/ParticleSystemComponent.h"
 #include "Components/InputComponent.h"
 #include "GameFramework/PlayerController.h"
 #include "Engine/World.h"
+#include "Kismet/GameplayStatics.h"
 #include "TimerManager.h"
 #include "Materials/MaterialInstanceDynamic.h"
+
 
 
 // Sets default values
 APlayerPawn::APlayerPawn()
 	:
-	ToushMoveSensivity(1.2f), //Чуствительность тача
-	MoveLimit(FVector2D(600.f, 500.f)) //Предел передвижения
+	TouchMoveSensivity(2.f), //Чуствительность тача
+	MoveLimit(FVector2D(1150.f, 600.f)) //Предел передвижения
 	
 {
- 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	PawnCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("PawnCollision"));
@@ -27,11 +30,10 @@ APlayerPawn::APlayerPawn()
 
 	PawnMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PawnMesh"));
 	PawnMesh->SetupAttachment(PawnCollision, NAME_None);
-	 
+
 	PawnCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("PawnCamera"));
 
 	ShootComponent = CreateDefaultSubobject<UShootComponent>(TEXT("ShootComponent"));
-
 } 
 
 void APlayerPawn::PossessedBy(AController * NewController)
@@ -52,15 +54,26 @@ void APlayerPawn::ExplodePawn_Implementation()
 	ShootComponent->StopShooting();
 
 	PawnMesh->SetMaterial(0, RecoverMaterial);
+
+	if (DestroyParticle)
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DestroyParticle, GetActorTransform(), true);
+
+	for (UActorComponent* Component : GetComponentsByClass(UParticleSystemComponent::StaticClass())) {
+		Component->Deactivate();
+	}
 }
 
 void APlayerPawn::RecoverPawn_Implementation()
 {
-	ShootComponent->StartShooting();
-
 	SetActorEnableCollision(true);
 
+	ShootComponent->StartShooting();
+
 	PawnMesh->SetMaterial(0, PawnMaterial);
+
+	for (UActorComponent* Component : GetComponentsByClass(UParticleSystemComponent::StaticClass())) {
+		Component->Activate(true);
+	}
 }
 
 
@@ -69,7 +82,7 @@ void APlayerPawn::RecoverPawn_Implementation()
 void APlayerPawn::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	PawnMaterial = PawnMesh->GetMaterial(0);
 }
 
@@ -78,7 +91,6 @@ void APlayerPawn::BeginPlay()
 void APlayerPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 // Called to bind functionality to input
@@ -87,7 +99,7 @@ void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	InputComponent->BindTouch(IE_Pressed, this, &APlayerPawn::OnTouchPress);
-
+	//InputComponent->BindTouch(IE_Released, this, &APlayerPawn::OnTouchRelease);
 	InputComponent->BindTouch(IE_Repeat, this, &APlayerPawn::OnTouchMove);
 }
 
@@ -101,15 +113,15 @@ float APlayerPawn::TakeDamage(float Damage, const FDamageEvent& DamageEvent, ACo
 }
 
 //Touch Controls
-void APlayerPawn::OnTouchMove(ETouchIndex::Type FingerIndex, FVector Location) 
+void APlayerPawn::OnTouchMove(ETouchIndex::Type FingerIndex, FVector Location)
 {
 	FVector2D TouchDeltaMove = FVector2D(TouchLocation.X - Location.X, TouchLocation.Y - Location.Y);
 
-	TouchDeltaMove *= ToushMoveSensivity;
+	TouchDeltaMove = TouchDeltaMove * TouchMoveSensivity;
 
 	FVector NewLocation = GetActorLocation();
-	NewLocation.X = FMath::Clamp(NewLocation.X + TouchDeltaMove.Y, -MoveLimit.Y, MoveLimit.Y); //Ограничитель передвижения по X
-	NewLocation.Y = FMath::Clamp(NewLocation.Y + TouchDeltaMove.X * -1.f, -MoveLimit.X, MoveLimit.X); //Ограничитель передвижения по Y
+	NewLocation.X = FMath::Clamp(NewLocation.X + TouchDeltaMove.Y, -MoveLimit.Y, MoveLimit.Y);
+	NewLocation.Y = FMath::Clamp(NewLocation.Y + TouchDeltaMove.X* -1.f, -MoveLimit.X, MoveLimit.X);
 
 	SetActorLocation(NewLocation);
 
@@ -118,6 +130,5 @@ void APlayerPawn::OnTouchMove(ETouchIndex::Type FingerIndex, FVector Location)
 
 void APlayerPawn::OnTouchPress(ETouchIndex::Type FingerIndex, FVector Location)
 {
-	UE_LOG(LogTemp, Log, TEXT("Touch Press : %s"), *TouchLocation.ToString());
 	TouchLocation = FVector2D(Location.X, Location.Y);
 }

@@ -2,13 +2,12 @@
 
 #pragma once
 
-
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "Components/BoxComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/ShootComponent.h"
-#include "PlayerPawn.generated.h" 
+#include "PlayerPawn.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPawnDamagedEvent);
 
@@ -21,10 +20,11 @@ public:
 	// Sets default values for this pawn's properties
 	APlayerPawn();
 
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	virtual float TakeDamage(float Damage, const FDamageEvent& DamageEvent, AController * InstigatedBy, AActor * DamageCauser) override;
 
 	void OnTouchMove(ETouchIndex::Type FingerIndex, FVector Location);
 
@@ -50,11 +50,10 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	
+
 	UFUNCTION(BlueprintPure, BlueprintNativeEvent, Category = "Healths")
 	bool CanBeDamaged();
 	bool CanBeDamaged_Implementation();
-
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Healths")
 	void ExplodePawn();
@@ -64,12 +63,12 @@ public:
 	void RecoverPawn();
 	void RecoverPawn_Implementation();
 
-	virtual float TakeDamage(float Damage, const FDamageEvent& DamageEvent, AController* InstigatedBy, AActor* DamageCauser);
+//	void RecieveAnyDamage(float Damage, const UDamageType * DamageType, AController * InstigatedBy, AActor * DamageCauser);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Pawn")
 	UBoxComponent* PawnCollision;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Pawn")
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category="Pawn")
 	UStaticMeshComponent* PawnMesh;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Pawn")
@@ -77,14 +76,17 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Shooting")
 	UShootComponent* ShootComponent;
-
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Controls")
-	float ToushMoveSensivity;
+	float TouchMoveSensivity;
 
 	UPROPERTY(BlueprintAssignable, Category = "Healths")
 	FPawnDamagedEvent PawnDamaged;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Pawn")
 	UMaterialInterface* RecoverMaterial;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Visual")
+	UParticleSystem* DestroyParticle;
 
 };

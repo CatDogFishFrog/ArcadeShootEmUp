@@ -11,7 +11,7 @@ class ARCADESHOOTEMUP_API ABonus : public AActor
 {
 	GENERATED_BODY()
 	
-public:	
+public:
 	// Sets default values for this actor's properties
 	ABonus();
 
@@ -20,18 +20,17 @@ protected:
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 
 	UFUNCTION(BlueprintNativeEvent)
-	void BonusCollected();
+		void BonusCollected();
 	virtual void BonusCollected_Implementation();
 
 	virtual void Tick(float DeltaTime) override;
 
-
 public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Shooting")
-	class USphereComponent* Collision;
+		class USphereComponent* Collision;
 
-	//UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Visual")
-	//UParticleSystem* CollectParticle;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Visual")
+		UParticleSystem* CollectParticle;
 
 };

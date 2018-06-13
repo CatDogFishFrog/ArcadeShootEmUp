@@ -15,18 +15,17 @@ struct FShootInfo
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shooting")
-	TSubclassOf<AShootProjectile> ProjetileClass;
+		TSubclassOf<AShootProjectile> ProjectileClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shooting")
-	float Damage;
+		float Damage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shooting")
-	FVector Offset;
+		FVector Offset;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shooting")
-	float Angle;
+		float Angle;
 
-	
 };
 
 
@@ -35,7 +34,7 @@ class ARCADESHOOTEMUP_API UShootComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	// Sets default values for this component's properties
 	UShootComponent();
 
@@ -47,18 +46,18 @@ protected:
 
 	FTimerHandle ShootingTimer;
 
-public:	
+public:
 
 	UFUNCTION(BlueprintCallable, Category = "Shooting")
-	void StartShooting();
-	
+		void StartShooting();
+
 	UFUNCTION(BlueprintCallable, Category = "Shooting")
-	void StopShooting();
+		void StopShooting();
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Shooting")
-	float ShootPeriod;
+		float ShootPeriod;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Shooting")
-	TArray<FShootInfo> ShootInfos;
-	
+		TArray<FShootInfo> ShootInfos;
+
 };

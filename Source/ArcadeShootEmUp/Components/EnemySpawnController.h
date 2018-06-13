@@ -24,15 +24,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemies")
 	float SpawnDelay;
-
 };
-
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ARCADESHOOTEMUP_API UEnemySpawnController : public UActorComponent
 {
 	GENERATED_BODY()
-
 
 protected:
 	// Called when the game starts
@@ -44,7 +41,7 @@ protected:
 
 	void SpawnEnemy();
 
-	FEnemySpawnInfo SpawnStage; 
+	FEnemySpawnInfo SpawnStage;
 	int EnemiesSpawned;
 
 	FTimerHandle ChangeStageTimer;
@@ -52,8 +49,8 @@ protected:
 
 	FRandomStream Random;
 
-public:	
-	
+public:
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemies")
 	TArray<FEnemySpawnInfo> SpawnStages;
 
@@ -62,5 +59,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemies")
 	float StageMaxDelay;
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemies")
+	float ChangeStageTimeMultiplier;
 };

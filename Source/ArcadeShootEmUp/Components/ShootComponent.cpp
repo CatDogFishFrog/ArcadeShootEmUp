@@ -5,8 +5,7 @@
 #include "TimerManager.h"
 
 // Sets default values for this component's properties
-UShootComponent::UShootComponent()
-	:
+UShootComponent::UShootComponent():
 	ShootPeriod(1.f)
 {
 
@@ -20,12 +19,10 @@ void UShootComponent::BeginPlay()
 	Super::BeginPlay();
 
 	StartShooting();
-	
 }
 
 void UShootComponent::Shoot()
 {
-
 	for (FShootInfo ShootInfo : ShootInfos)
 	{
 		FActorSpawnParameters SpawnParameters;
@@ -39,10 +36,9 @@ void UShootComponent::Shoot()
 
 		FRotator SpawnRotation = GetOwner()->GetActorRotation();
 		SpawnRotation.Add(0.f, ShootInfo.Angle, 0.f);
-		 
-		AShootProjectile* Projectile = GetWorld()->SpawnActor<AShootProjectile>(ShootInfo.ProjetileClass, SpawnLocation, SpawnRotation, SpawnParameters);
-		if(Projectile) Projectile->Damage = ShootInfo.Damage;
 
+		AShootProjectile* Projectile = GetWorld()->SpawnActor<AShootProjectile>(ShootInfo.ProjectileClass, SpawnLocation, SpawnRotation, SpawnParameters);
+		if (Projectile) Projectile->Damage = ShootInfo.Damage;
 	}
 }
 
@@ -55,5 +51,3 @@ void UShootComponent::StopShooting()
 {
 	GetWorld()->GetTimerManager().ClearTimer(ShootingTimer);
 }
-
-
