@@ -1,6 +1,7 @@
 # ArcadeShootEmUp
-Колись була моя дипломна робота
 
-Віглядає як Space Invaders (хоча, якщо подмати, то більше схоже на Chicken Invaders)
+It used to be my Graduate work
 
-Літалка та слрілялка. Контенту не багато, але все зроблено для того, щоб його можна було додавати навіть не залазячи у код (але не у грі, а у самому рушію). Тобто гарно працює
+Looks like Space Invaders (though, come to think of it, it's more like Chicken Invaders)
+
+Airplane and shooter. There is not a lot of content, but everything is done so that it can be added without even getting into the code (but not in the game, but in the engine itself). That is, it works well
